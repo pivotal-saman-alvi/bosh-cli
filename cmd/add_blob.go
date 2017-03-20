@@ -3,6 +3,9 @@ package cmd
 import (
 	"os"
 
+	goflags "github.com/jessevdk/go-flags"
+	"path/filepath"
+
 	boshreldir "github.com/cloudfoundry/bosh-cli/releasedir"
 	boshui "github.com/cloudfoundry/bosh-cli/ui"
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
@@ -35,4 +38,15 @@ func (c AddBlobCmd) Run(opts AddBlobOpts) error {
 	c.ui.PrintLinef("Added blob '%s'", blob.Path)
 
 	return nil
+}
+
+func (c AddBlobCmd) Complete(match string) []goflags.Completion {
+	matchedFiles, _ := filepath.Glob(match + "*")
+	ret := make([]goflags.Completion, len(matchedFiles))
+
+	for i, v := range matchedFiles {
+		ret[i].Item = v
+	}
+
+	return ret
 }
