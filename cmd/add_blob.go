@@ -3,9 +3,9 @@ package cmd
 import (
 	"os"
 
+	"fmt"
 	goflags "github.com/jessevdk/go-flags"
 	"path/filepath"
-	"fmt"
 
 	boshreldir "github.com/cloudfoundry/bosh-cli/releasedir"
 	boshui "github.com/cloudfoundry/bosh-cli/ui"
@@ -52,5 +52,3 @@ func (c AddBlobCmd) Complete(match string) []goflags.Completion {
 
 	return ret
 }
-
-

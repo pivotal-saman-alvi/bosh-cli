@@ -3,7 +3,8 @@ package cmd
 import (
 	boshuuid "github.com/cloudfoundry/bosh-utils/uuid"
 	"github.com/cppforlife/go-patch/patch"
-
+	goflags "github.com/jessevdk/go-flags"
+	"strings"
 	boshdir "github.com/cloudfoundry/bosh-cli/director"
 	boshrel "github.com/cloudfoundry/bosh-cli/release"
 )
@@ -853,6 +854,7 @@ type AddBlobOpts struct {
 
 	Directory DirOrCWDArg `long:"dir" description:"Release directory path if not current working directory" default:"."`
 
+	Complete
 	cmd
 }
 
@@ -895,6 +897,27 @@ type VariablesOpts struct {
 }
 
 type cmd struct{}
+type Complete struct{}
+
+func (c Complete) Complete(match string) []goflags.Completion {
+	options := []string{
+		"hello world",
+		"hello universe",
+		"hello multiverse",
+	}
+
+	ret := make([]goflags.Completion, 0, len(options))
+
+	for _, o := range options {
+		if strings.HasPrefix(o, match) {
+			ret = append(ret, goflags.Completion{
+				Item: o,
+			})
+		}
+	}
+
+	return ret
+}
 
 // Execute is necessary for each command to be goflags.Commander
 func (c cmd) Execute(_ []string) error {
