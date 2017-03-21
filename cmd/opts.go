@@ -854,12 +854,11 @@ type AddBlobOpts struct {
 
 	Directory DirOrCWDArg `long:"dir" description:"Release directory path if not current working directory" default:"."`
 
-	Complete
 	cmd
 }
 
 type AddBlobArgs struct {
-	Path      string `positional-arg-name:"PATH"`
+	Path      FileComplete `positional-arg-name:"PATH"`
 	BlobsPath string `positional-arg-name:"BLOBS-PATH"`
 }
 
@@ -897,9 +896,11 @@ type VariablesOpts struct {
 }
 
 type cmd struct{}
-type Complete struct{}
+type FileComplete struct{
+	Path string
+}
 
-func (c Complete) Complete(match string) []goflags.Completion {
+func (c FileComplete) Complete(match string) []goflags.Completion {
 	options := []string{
 		"hello world",
 		"hello universe",

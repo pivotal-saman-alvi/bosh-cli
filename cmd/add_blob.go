@@ -24,7 +24,7 @@ func NewAddBlobCmd(blobsDir boshreldir.BlobsDir, fs boshsys.FileSystem, ui boshu
 }
 
 func (c AddBlobCmd) Run(opts AddBlobOpts) error {
-	file, err := c.fs.OpenFile(opts.Args.Path, os.O_RDONLY, 0)
+	file, err := c.fs.OpenFile(opts.Args.Path.Path, os.O_RDONLY, 0)
 	if err != nil {
 		return bosherr.WrapErrorf(err, "Opening blob")
 	}
