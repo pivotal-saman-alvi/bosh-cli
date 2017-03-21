@@ -191,7 +191,7 @@ func (c Cmd) Execute() (cmdErr error) {
 		return NewRunErrandCmd(deployment, downloader, deps.UI).Run(*opts)
 
 	case *AttachDiskOpts:
-		return NewAttachDiskCmd(c.deployment()).Run(*opts)
+		return NewAttachDiskCmd(c.deployment(), deps.UI).Run(*opts)
 
 	case *DisksOpts:
 		return NewDisksCmd(deps.UI, c.director()).Run(*opts)
