@@ -18,11 +18,12 @@ func NewAttachDiskCmd(deployment boshdir.Deployment, ui boshui.UI) AttachDiskCmd
 }
 
 func (c AttachDiskCmd) Run(opts AttachDiskOpts) error {
+	fmt.Sprintf("====== im running this and im complaining")
 	return c.deployment.AttachDisk(opts.Args.Slug, opts.Args.DiskCID)
 }
 
-func (c AttachDiskCmd) Complete(match string) []goflags.Completion {
-	fmt.Println("==== WHY HELLO BOB IM ON MY MERRY WAY NOW")
+func (c *AttachDiskCmd) Complete(match string) []goflags.Completion {
+	fmt.Sprintf("==== WHY HELLO BOB IM ON MY MERRY WAY NOW %s!!", match)
 	c.ui.PrintLinef("attaching a disk!", c.deployment.Name())
 	ret := make([]goflags.Completion, 1)
 	ret[0] = goflags.Completion{Item: c.deployment.Name()}

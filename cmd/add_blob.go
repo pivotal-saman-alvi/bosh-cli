@@ -5,6 +5,7 @@ import (
 
 	goflags "github.com/jessevdk/go-flags"
 	"path/filepath"
+	"fmt"
 
 	boshreldir "github.com/cloudfoundry/bosh-cli/releasedir"
 	boshui "github.com/cloudfoundry/bosh-cli/ui"
@@ -41,6 +42,7 @@ func (c AddBlobCmd) Run(opts AddBlobOpts) error {
 }
 
 func (c AddBlobCmd) Complete(match string) []goflags.Completion {
+	fmt.Sprintf("=========== hallelujah")
 	matchedFiles, _ := filepath.Glob(match + "*")
 	ret := make([]goflags.Completion, len(matchedFiles))
 
@@ -50,3 +52,5 @@ func (c AddBlobCmd) Complete(match string) []goflags.Completion {
 
 	return ret
 }
+
+
