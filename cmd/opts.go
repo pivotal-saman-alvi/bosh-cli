@@ -4,7 +4,6 @@ import (
 	boshuuid "github.com/cloudfoundry/bosh-utils/uuid"
 	"github.com/cppforlife/go-patch/patch"
 	goflags "github.com/jessevdk/go-flags"
-	"strings"
 	boshdir "github.com/cloudfoundry/bosh-cli/director"
 	boshrel "github.com/cloudfoundry/bosh-cli/release"
 )
@@ -896,7 +895,7 @@ type VariablesOpts struct {
 }
 
 type cmd struct{}
-type FileComplete struct{
+type FileComplete struct {
 	Path string
 }
 
@@ -908,14 +907,9 @@ func (c FileComplete) Complete(match string) []goflags.Completion {
 	}
 
 	ret := make([]goflags.Completion, 0, len(options))
-
-	for _, o := range options {
-		if strings.HasPrefix(o, match) {
-			ret = append(ret, goflags.Completion{
-				Item: o,
-			})
-		}
-	}
+	ret = append(ret, goflags.Completion{
+		Item: options[0],
+	})
 
 	return ret
 }

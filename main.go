@@ -32,6 +32,7 @@ func main() {
 		fail(err, ui, logger)
 	}
 
+	fmt.Printf("====== hey cmd here! %v", cmd)
 	err = cmd.Execute()
 	if err != nil {
 		fail(err, ui, logger)
