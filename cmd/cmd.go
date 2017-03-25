@@ -29,6 +29,7 @@ type Cmd struct {
 }
 
 func NewCmd(boshOpts BoshOpts, opts interface{}, deps BasicDeps) Cmd {
+	fmt.Printf("========================== hahahha i am here at new comd")
 	return Cmd{boshOpts, opts, deps}
 }
 
@@ -47,6 +48,8 @@ func (c Cmd) Execute() (cmdErr error) {
 			}
 		}
 	}()
+
+	fmt.Println("====================== here ")
 
 	c.configureUI()
 	c.configureFS()

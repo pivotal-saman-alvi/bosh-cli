@@ -1,11 +1,24 @@
 package cmd
 
-import (
+import (	
+	// boshcmd "github.com/cloudfoundry/bosh-cli/cmd"
 	boshuuid "github.com/cloudfoundry/bosh-utils/uuid"
 	"github.com/cppforlife/go-patch/patch"
 	goflags "github.com/jessevdk/go-flags"
 	boshdir "github.com/cloudfoundry/bosh-cli/director"
 	boshrel "github.com/cloudfoundry/bosh-cli/release"
+	cmdconf "github.com/cloudfoundry/bosh-cli/cmd/config"
+	boshui "github.com/cloudfoundry/bosh-cli/ui"
+	// "os"
+
+	"path/filepath"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	"os"
+	"os/signal"
+	"syscall"
+	bilog "github.com/cloudfoundry/bosh-cli/logger"
+	// boshlogfile "github.com/cloudfoundry/bosh-utils/logger/file"
+	"fmt"
 )
 
 type BoshOpts struct {
@@ -899,13 +912,87 @@ type FileComplete struct {
 	Path string
 }
 
+func newLogger() boshlog.Logger {
+	level := boshlog.LevelNone
+
+	// logLevelString :=  boshlog.LevelNone
+
+	// if logLevelString != "" {
+	// 	var err error
+	// 	level, err = boshlog.Levelify(logLevelString)
+	// 	if err != nil {
+	// 		err = bosherr.WrapError(err, "Invalid BOSH_LOG_LEVEL value")
+	// 		logger := boshlog.NewLogger(boshlog.LevelError)
+	// 		ui := boshui.NewConsoleUI(logger)
+	// 		fail(err, ui, logger)
+	// 	}
+	// }
+
+	return newSignalableLogger(boshlog.NewLogger(level))
+}
+
+func newSignalableLogger(logger boshlog.Logger) boshlog.Logger {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, syscall.SIGHUP)
+	signalableLogger, _ := bilog.NewSignalableLogger(logger, c)
+	return signalableLogger
+}
+
+func config() cmdconf.Config {
+	logger := newLogger()
+	ui := boshui.NewConfUI(logger)
+
+	deps := NewBasicDeps(ui, logger)
+	tmpDirPath, err := deps.FS.ExpandPath(filepath.Join("~", ".bosh", "tmp"))
+	if err != nil {
+		fmt.Printf("================= error while fs'ing! %v", tmpDirPath)
+	}
+	deps.FS.ChangeTempRoot(tmpDirPath)
+	config, err := cmdconf.NewFSConfigFromPath(BoshOpts{}.ConfigPathOpt, deps.FS)
+
+	if err != nil {
+		fmt.Printf("================ omg config was nil %v", err)
+		return nil
+	}
+	fmt.Printf("================ config: %v", config)
+	return config
+}
+
+func session() Session {
+	logger := newLogger()
+
+	ui := boshui.NewConfUI(logger)
+	deps := NewBasicDeps(ui, logger)
+
+	return NewSessionFromOpts(BoshOpts{}, config(), deps.UI, true, true, deps.FS, deps.Logger)
+}
+
 func (c FileComplete) Complete(match string) []goflags.Completion {
-	options := []string{
+	// logger := newLogger()
+
+	// ui := boshui.NewConfUI(logger)
+	// // deps := NewBasicDeps(ui, logger)
+
+	// cmdFactory := NewFactory(NewBasicDeps(ui, logger))
+
+	// cmd, err := cmdFactory.New(os.Args[1:])
+	// if err != nil {
+	// 	fmt.Printf("========== error making command: %v", cmd)
+	// 	// fail(err, ui, logger)
+	// }
+	// fmt.Println("=>>>>>>>>>>>>>> cmd args: %v", os.Args[1:])
+	// director, err := session().Director()
+	// if err != nil {
+	// 	fmt.Println("============ director?! %v", director)
+	// }
+
+	options := []string {
 		"hello world",
 		"hello universe",
 		"hello multiverse",
 	}
 
+	fmt.Println("=============== autocomplete here")
 	ret := make([]goflags.Completion, 0, len(options))
 	ret = append(ret, goflags.Completion{
 		Item: options[0],
@@ -913,6 +1000,7 @@ func (c FileComplete) Complete(match string) []goflags.Completion {
 
 	return ret
 }
+
 
 // Execute is necessary for each command to be goflags.Commander
 func (c cmd) Execute(_ []string) error {

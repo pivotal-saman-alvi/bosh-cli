@@ -9,6 +9,7 @@ import (
 	boshuaa "github.com/cloudfoundry/bosh-cli/uaa"
 	boshui "github.com/cloudfoundry/bosh-cli/ui"
 	boshuit "github.com/cloudfoundry/bosh-cli/ui/task"
+	// "fmt"
 )
 
 type SessionImpl struct {
@@ -44,7 +45,10 @@ func NewSessionImpl(
 	}
 }
 
-func (c SessionImpl) Environment() string        { return c.context.Environment() }
+func (c SessionImpl) Environment() string {
+	return c.context.Environment() 
+}
+
 func (c SessionImpl) Credentials() cmdconf.Creds { return c.context.Credentials() }
 
 func (c SessionImpl) UAA() (boshuaa.UAA, error) {

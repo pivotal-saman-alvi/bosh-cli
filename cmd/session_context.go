@@ -4,6 +4,7 @@ import (
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
 
 	cmdconf "github.com/cloudfoundry/bosh-cli/cmd/config"
+	"fmt"
 )
 
 // SessionContextImpl prefers options over config values
@@ -23,6 +24,7 @@ func NewSessionContextImpl(
 }
 
 func (c SessionContextImpl) Environment() string {
+	fmt.Printf("================= environment opt: %v", c.opts.EnvironmentOpt)
 	return c.config.ResolveEnvironment(c.opts.EnvironmentOpt)
 }
 

@@ -107,5 +107,9 @@ func (f Factory) New(args []string) (Cmd, error) {
 		cmdOpts = &MessageOpts{Message: helpText.String()}
 	}
 
-	return NewCmd(*boshOpts, cmdOpts, f.deps), err
+	fmt.Printf("============= command options are: %v", cmdOpts)
+
+	cmd := NewCmd(*boshOpts, cmdOpts, f.deps)
+
+	return cmd, err
 }
